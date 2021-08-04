@@ -1,0 +1,39 @@
+package:
+  name: manset
+  version: 0.0.1
+
+source:
+  path: ../
+
+build:
+  number: 1
+
+channels:
+  - mateisarivan
+  - conda-forge
+  - default
+
+dependencies:
+  - anaconda-client
+  - conda-build
+
+requirements:
+  build:
+    - python
+    - setuptools
+
+  run:
+    - python
+    - setuptools
+    - numpy
+    - matplotlib
+
+  entry_points:
+    - manset = manset.__init__:manset_gui
+
+about:
+  summary: This is a simple meta-package
+
+extra:
+  recipe-maintainers:
+    -mateisarivan
