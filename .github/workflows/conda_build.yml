@@ -1,12 +1,12 @@
 
 name: Build and upload conda packages
 
-# on:
-#   release:
-#     types: ['released', 'prereleased']
+on:
+  release:
+    types: ['released', 'prereleased']
 
 # workflow_dispatch:        # Un comment line if you also want to trigger action manually
-on: [push]
+# on: [push]
 
 jobs:
   conda_deployment_with_new_tag:
