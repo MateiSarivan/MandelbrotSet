@@ -4,6 +4,7 @@ from tkinter.constants import HORIZONTAL
 import numpy as np
 import matplotlib.pyplot as plt
 from manset.clean_m import *
+from manset.stats_view import StatsView
 from matplotlib.backends.backend_tkagg import (
     FigureCanvasTkAgg, NavigationToolbar2Tk)
 from matplotlib.backend_bases import key_press_handler
@@ -15,15 +16,22 @@ import os
 class MansetGUI:
     def __init__(self):
 
-        self.XYRange = np.linspace(0.0001, 3.0, 100)
-        self.XFocus = np.linspace(-2.3, 0.7, 100)
-        self.YFocus = np.linspace(-1.5, 1.5, 100)
-        self.PointsNumber = np.linspace(50, 5000, 100)
-        self.CurrentXFocus = self.XFocus[49]
-        self.CurrentYFocus = self.YFocus[49]
+        self.XYRange=np.empty(100)
+        range_start = np.double(3)
+        for index in np.arange(100):
+            self.XYRange[99-index] = range_start
+            range_start = range_start/1.1
+        #self.XYRange = np.linspace(0.0001, 3.0, 100)
+
+        self.XFocus = np.linspace(-2.3, 0.7, 200)
+        self.YFocus = np.linspace(-1.5, 1.5, 200)
+        self.PointsNumber = np.linspace(50, 10000, 100)
+        self.CurrentXFocus = self.XFocus[99]
+        self.CurrentYFocus = self.YFocus[99]
         self.CurrentXYRange = self.XYRange[99]
-        self.CurrentPointsNumber = self.PointsNumber[4]
+        self.CurrentPointsNumber = self.PointsNumber[0]
         self.core_no = None
+        self.experiments = []
        
         self.root = tkinter.Tk()
         self.root.geometry("1366x768")
@@ -46,6 +54,8 @@ class MansetGUI:
         frame_selected_compute_mode = tkinter.Frame(controls_frame)
         frame_selected_cores = tkinter.Frame(controls_frame)
         frame_selected_no_points = tkinter.Frame(controls_frame)
+        frame_saved_experiments = tkinter.Frame(controls_frame)
+        frame_buttons = tkinter.Frame(controls_frame)
 
 
         self.fig = Figure(figsize=(10, 10), dpi=100)
@@ -64,6 +74,7 @@ class MansetGUI:
             key_press_handler(event, self.canvas, toolbar)
         def press():
             pass
+
         self.variable = tkinter.StringVar(self.root)
         self.variable.set("Naïve")
         txt_compute_mode = tkinter.StringVar()
@@ -78,6 +89,7 @@ class MansetGUI:
         txt_min_y = tkinter.StringVar()
         txt_max_y = tkinter.StringVar()
         txt_range = tkinter.StringVar()
+        txt_saved_experiments = tkinter.StringVar()
         txt_selected_compute_mode = tkinter.StringVar()
         txt_selected_cores = tkinter.StringVar()
         txt_selected_no_points =tkinter.StringVar()
@@ -90,6 +102,7 @@ class MansetGUI:
         self.txt_selected_compute_mode_value = tkinter.StringVar()
         self.txt_selected_cores_value = tkinter.StringVar()
         self.txt_selected_no_points_value =tkinter.StringVar()
+        self.txt_saved_experiments_value = tkinter.StringVar()
 
         txt_compute_mode.set("Select computational mode: ")
         txt_no_cores.set("Select number of cores: ")
@@ -106,6 +119,7 @@ class MansetGUI:
         txt_selected_compute_mode.set("Selected computation mode: ")
         txt_selected_cores.set("Number of cores selected: ")
         txt_selected_no_points.set("Number of points per axis: ")
+        txt_saved_experiments.set("Number of saved experiments: ")
         
         self.txt_selected_no_points_value.set(self.CurrentPointsNumber)
         self.txt_time_value.set("TBD")
@@ -116,6 +130,7 @@ class MansetGUI:
         self.txt_range_value.set(self.XYRange[99])
         self.txt_selected_compute_mode_value.set("Naïve")
         self.txt_selected_cores_value.set("Default")
+        self.txt_saved_experiments_value.set("0")
 
         
         label_compute_mode = tkinter.Label(compute_mode_frame, textvariable=txt_compute_mode, width=30)
@@ -130,6 +145,7 @@ class MansetGUI:
         label_min_y = tkinter.Label(frame_min_y, textvariable=txt_min_y, width=30)
         label_max_y = tkinter.Label(frame_max_y, textvariable=txt_max_y, width=30)
         label_range = tkinter.Label(frame_range, textvariable=txt_range, width=30)
+        label_saved_experiments = tkinter.Label(frame_saved_experiments, textvariable=txt_saved_experiments, width=30)
         label_selected_compute_mode = tkinter.Label(frame_selected_compute_mode, textvariable=txt_selected_compute_mode, width=30)
         label_selected_cores = tkinter.Label(frame_selected_cores, textvariable=txt_selected_cores, width=30)
         label_selected_no_points = tkinter.Label(frame_selected_no_points, textvariable=txt_selected_no_points, width=30)
@@ -142,6 +158,7 @@ class MansetGUI:
         label_selected_compute_mode_value = tkinter.Label(frame_selected_compute_mode, textvariable=self.txt_selected_compute_mode_value, width=30)
         label_selected_cores_value = tkinter.Label(frame_selected_cores, textvariable=self.txt_selected_cores_value, width=30)
         label_selected_no_points_value = tkinter.Label(frame_selected_no_points, textvariable=self.txt_selected_no_points_value, width=30)
+        label_saved_experiments_value = tkinter.Label(frame_saved_experiments, textvariable=self.txt_saved_experiments_value, width=30)
         self.compute_mode = tkinter.OptionMenu(compute_mode_frame,
                                                self.variable,
                                                "Naïve", "JIT",
@@ -152,9 +169,9 @@ class MansetGUI:
         self.compute_mode.config(width=15)
         self.scaler_core_no = tkinter.Scale(master=no_cores_frame, from_=0,
          to=os.cpu_count(), orient=tkinter.HORIZONTAL, length=130, command=self.update_scale)
-        self.scaler_x = tkinter.Scale(master=x_frame, from_=1, to=100,
-                                      orient=tkinter.HORIZONTAL, command=self.update_scale)
-        self.scaler_y = tkinter.Scale(master=y_frame, from_=1, to=100,
+        self.scaler_x = tkinter.Scale(master=x_frame, from_=1, to=200,
+                                      orient=tkinter.HORIZONTAL, command=self.update_scale, length=200)
+        self.scaler_y = tkinter.Scale(master=y_frame, from_=1, to=200,
                                       orient=tkinter.VERTICAL, command=self.update_scale)
         self.scaler_range = tkinter.Scale(master=zoom_frame, from_=1,
                                           to=100, orient=tkinter.VERTICAL,
@@ -163,10 +180,10 @@ class MansetGUI:
                                               to=100,
                                               orient=tkinter.HORIZONTAL,
                                               command=self.update_scale, length=130)
-        self.scaler_x.set(50)
-        self.scaler_y.set(50)
+        self.scaler_x.set(100)
+        self.scaler_y.set(100)
         self.scaler_range.set(100)
-        self.scaler_points_no.set(4)
+        self.scaler_points_no.set(0)
         self.scaler_core_no.set(0)
         self.scaler_core_no.bind("<ButtonRelease-1>", self.updateValue)
         self.scaler_x.bind("<ButtonRelease-1>", self.updateValue)
@@ -174,6 +191,9 @@ class MansetGUI:
         self.scaler_range.bind("<ButtonRelease-1>", self.updateValue)
         self.scaler_points_no.bind("<ButtonRelease-1>", self.updateValue)
         self.canvas.mpl_connect("key_press_event", on_key_press)
+
+        button_stats = tkinter.Button(frame_buttons, text="Show Statistics",  command=self.stats)
+        button_save = tkinter.Button(frame_buttons, text="Save experiments",  command=self.save)
 
         label_compute_mode.pack(side=tkinter.LEFT)
         self.compute_mode.pack(side=tkinter.LEFT)
@@ -196,6 +216,7 @@ class MansetGUI:
         label_selected_compute_mode.pack(side=tkinter.LEFT)
         label_selected_cores.pack(side=tkinter.LEFT)
         label_selected_no_points.pack(side=tkinter.LEFT)
+        label_saved_experiments.pack(side=tkinter.LEFT)
         label_time_value.pack(side=tkinter.LEFT)
         label_min_x_value.pack(side=tkinter.LEFT)
         label_max_x_value.pack(side=tkinter.LEFT)
@@ -205,6 +226,7 @@ class MansetGUI:
         label_selected_compute_mode_value.pack(side=tkinter.LEFT)
         label_selected_cores_value.pack(side=tkinter.LEFT)
         label_selected_no_points_value.pack(side=tkinter.LEFT)
+        label_saved_experiments_value.pack(side=tkinter.LEFT)
 
         sep = ttk.Separator(controls_frame, orient="horizontal")
         sep.pack(side=tkinter.TOP, expand=True)
@@ -217,6 +239,13 @@ class MansetGUI:
         frame_min_y.pack(side=tkinter.TOP)
         frame_max_y.pack(side=tkinter.TOP)
         frame_time.pack(side=tkinter.TOP)
+        frame_saved_experiments.pack(side=tkinter.TOP)
+        self.var1 = tkinter.IntVar()
+        self.chbox = tkinter.Checkbutton(controls_frame, text='Save Experiment',variable=self.var1, onvalue=1, offvalue=0)
+        self.chbox.pack(side=tkinter.TOP)
+        button_stats.pack(side=tkinter.LEFT, expand=True, fill=tkinter.X)
+        button_save.pack(side=tkinter.LEFT, expand = True, fill=tkinter.X)
+        
         
         
         sep = ttk.Separator(controls_frame, orient="horizontal")
@@ -230,6 +259,7 @@ class MansetGUI:
         x_frame.pack(side=tkinter.TOP)
         sep = ttk.Separator(controls_frame, orient="horizontal")
         sep.pack(side=tkinter.TOP, expand=True)
+        frame_buttons.pack(side=tkinter.TOP, expand=True, fill=tkinter.X)
         
         
         plot_frame.pack(side=tkinter.LEFT, fill=tkinter.Y, expand=False)
@@ -239,6 +269,7 @@ class MansetGUI:
     def run_gui(self):
 
         self.plot()
+        self.var1.set(1)
         self.root.mainloop()
         
         # plt.show()
@@ -258,20 +289,26 @@ class MansetGUI:
         x_max = self.CurrentXFocus + self.CurrentXYRange/2
         y_min = self.CurrentYFocus - self.CurrentXYRange/2
         y_max = self.CurrentYFocus + self.CurrentXYRange/2
-        self.txt_max_x_value.set(str(round(x_max, 4)))
-        self.txt_min_x_value.set(str(round(x_min, 4)))
-        self.txt_max_y_value.set(str(round(y_max, 4)))
-        self.txt_min_y_value.set(str(round(y_min, 4)))
+        self.txt_max_x_value.set(str(round(x_max, 6)))
+        self.txt_min_x_value.set(str(round(x_min, 6)))
+        self.txt_max_y_value.set(str(round(y_max, 6)))
+        self.txt_min_y_value.set(str(round(y_min, 6)))
         x_range = np.linspace(x_min, x_max, int(self.CurrentPointsNumber))
         y_range = np.linspace(y_min, y_max, int(self.CurrentPointsNumber))
-        self.txt_range_value.set(str(round(x_range[x_range.size-1] - x_range[0], 4)))
+        self.txt_range_value.set(str(round(x_range[x_range.size-1] - x_range[0], 6)))
         self.txt_selected_no_points_value.set(str(self.CurrentPointsNumber))
         self.txt_selected_cores_value.set(txt_core_no)
         self.txt_selected_compute_mode_value.set(self.variable.get())
 
+    def stats(self):
+        print("stats")
+        StatsView(self.root, self.experiments)
+
+    def save(self):
+        print("save")
 
     def plot(self):
-        print(self.variable.get())
+
         x_min = self.CurrentXFocus - self.CurrentXYRange/2
         x_max = self.CurrentXFocus + self.CurrentXYRange/2
         y_min = self.CurrentYFocus - self.CurrentXYRange/2
@@ -280,28 +317,40 @@ class MansetGUI:
         y_range = np.linspace(y_min, y_max, int(self.CurrentPointsNumber))
         mesh = np.empty((len(x_range), len(y_range)))
         start = timeit.default_timer()
-        print("here   ", type(np.arange(34)))
-        print("here   ", y_range.size)
-
+ 
         mesh = comp_type[self.variable.get()](x_range, y_range, self.core_no)
     
-        # for index_x in range(len(x_range)):
-        #     for index_y in range(len(y_range)):
-        #         c_real = x_range[index_x]
-        #         c_imaginary = y_range[index_y]
-
-        #         c = complex(c_real, c_imaginary)
-
-        #         mesh[index_x, index_y] = divergence_check(c, 100)
         end = timeit.default_timer() - start
-        print(end)
-        self.txt_time_value.set(str(round(end, 4)))
+
+        self.txt_time_value.set(str(round(end, 6)))
         self.fig.clear()
-        print('Cleared')
-        # time.sleep(1)
+
+ 
         self.fig.add_subplot(111).imshow(mesh.T, interpolation="nearest",
-                                         cmap=plt.cm.hot)
+                                         cmap=plt.cm.hot, extent=[x_min, x_max, y_min, y_max])
+
         self.fig.canvas.draw_idle()
+        self.core_no = self.scaler_core_no.get()
+        txt_core_no = str(self.core_no)
+        if self.core_no == 0:
+            self.core_no = None
+            txt_core_no = "Default"
+        experiment = {
+            "elapsed_time": end,
+            "computation_method": self.variable.get(),
+            "number of cores": txt_core_no,
+            "range": x_range[x_range.size-1] - x_range[0],
+            "min_x": x_min,
+            "max_x": x_max,
+            "min_y": y_min,
+            "max_y": y_max,
+            "no_points": self.CurrentPointsNumber,
+            "result": mesh
+        }
+
+        if self.var1.get():
+            self.experiments.append(experiment)
+            self.txt_saved_experiments_value.set(str(len(self.experiments)))
 
     def updateValue(self, event):
         self.CurrentXFocus = self.XFocus[self.scaler_x.get()-1]
