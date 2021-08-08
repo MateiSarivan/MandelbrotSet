@@ -5,6 +5,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from manset.clean_m import *
 from manset.stats_view import StatsView
+from manset.plotting import plot_experiments
 from matplotlib.backends.backend_tkagg import (
     FigureCanvasTkAgg, NavigationToolbar2Tk)
 from matplotlib.backend_bases import key_press_handler
@@ -12,6 +13,9 @@ from matplotlib.figure import Figure
 import time
 import timeit
 import os
+from datetime import date, datetime
+from manset.pdf_gen import generate_pdf
+from manset.pdf_merge import merge_pdfs
 
 class MansetGUI:
     def __init__(self):
@@ -305,8 +309,18 @@ class MansetGUI:
         StatsView(self.root, self.experiments)
 
     def save(self):
-        print("save")
+        dt_string = datetime.now().strftime("%d-%m-%Y %H-%M-%S")
+        name = "Mandelbrot " + dt_string
+        file_address = tkinter.filedialog.askdirectory()
+        if name not in file_address and len(file_address):
+            file_address = os.path.join(file_address, name)
+            if not os.path.exists(file_address):
+                os.makedirs(file_address)
 
+        np.save(os.path.join(file_address, "Mandelbrot_data.npy"), self.experiments)
+        plot_experiments(file_address, self.experiments)
+        generate_pdf(file_address, self.experiments)
+        merge_pdfs(file_address, "Mandelbrot set experiments.pdf")
     def plot(self):
 
         x_min = self.CurrentXFocus - self.CurrentXYRange/2
