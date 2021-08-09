@@ -4,6 +4,7 @@ from numba import core
 import numpy as np
 import functools
 
+
 def divergence_check_naive(x_range, y_range, core_no=None):
     len_x = len(x_range)
     len_y = len(y_range)
@@ -12,7 +13,7 @@ def divergence_check_naive(x_range, y_range, core_no=None):
         for index_y in range(len_y):
             c_real = x_range[index_x]
             c_imaginary = y_range[index_y]
-            
+
             c = complex(c_real, c_imaginary)
 
             z = complex(0, 0)
@@ -22,8 +23,8 @@ def divergence_check_naive(x_range, y_range, core_no=None):
                 if np.abs(z) > 4:
                     mesh[index_x, index_y] = iteration_number
                     break
-            # else:
-            #     mesh[index_x, index_y] = 0
+            else:
+                mesh[index_x, index_y] = 0
 
     return mesh
 
@@ -61,7 +62,7 @@ def divergence_check_jit(x_range, y_range, core_no=None):
         for index_y in np.arange(y_range.size):
 
             c_imaginary = y_range[index_y]
-            
+
             c = complex(c_real, c_imaginary)
 
             z = complex(0, 0)
@@ -75,6 +76,7 @@ def divergence_check_jit(x_range, y_range, core_no=None):
                 mesh[index_x, index_y] = 0
 
     return mesh
+
 
 @nb.jit(nopython=True)
 def div_check_jit_parallel(c_real, c_imaginary):
@@ -87,7 +89,8 @@ def div_check_jit_parallel(c_real, c_imaginary):
     else:
         return 0
 
-@nb.jit(nopython = True, parallel = True)
+
+@nb.jit(nopython=True, parallel=True)
 def divergence_check_jit_parallel(x_range, y_range, core_no=None):
     mesh = np.empty((x_range.size, y_range.size))
     for index_x in nb.prange(x_range.size):
@@ -98,7 +101,8 @@ def divergence_check_jit_parallel(x_range, y_range, core_no=None):
 
     return mesh
 
-@nb.jit(nopython=True, parallel = True)
+
+@nb.jit(nopython=True, parallel=True)
 def divergence_check_jit3(x_range, y_range, core_no=None):
 
     mesh = np.empty((x_range.size, y_range.size))
@@ -107,7 +111,7 @@ def divergence_check_jit3(x_range, y_range, core_no=None):
         for index_y in np.arange(y_range.size):
 
             c_imaginary = y_range[index_y]
-            
+
             c = complex(c_real, c_imaginary)
 
             z = complex(0, 0)
@@ -121,6 +125,7 @@ def divergence_check_jit3(x_range, y_range, core_no=None):
                 mesh[index_x, index_y] = 0
 
     return mesh
+
 
 def div_check(y_range, c_real, core_no=None):
     result = np.empty(y_range.size)
@@ -139,6 +144,7 @@ def div_check(y_range, c_real, core_no=None):
 
     # print(result)
     return result
+
 
 @nb.jit(nopython=True)
 def div_check_jit(y_range, c_real):
@@ -164,13 +170,11 @@ def divergence_check_multi(x_range=np.array([1, 2, 3, 4]), y_range=np.array([5, 
     len_x = len(x_range)
     len_y = len(y_range)
     mesh = np.empty((len_x, len_y))
-    #div_check(0, [0, 1])
     partial_div_check = functools.partial(div_check, y_range)
     print("core_no ", core_no)
     pool = ProcessPoolExecutor(max_workers=core_no)
     future = pool.map(partial_div_check, x_range)
     pool.shutdown()
-
 
     index = 0
     for result in future:
@@ -190,7 +194,6 @@ def divergence_check_multi_jit(x_range=np.array([1, 2, 3, 4]), y_range=np.array(
     future = pool.map(partial_div_check, x_range)
     pool.shutdown()
 
-
     index = 0
     print(type(future))
     for result in future:
@@ -198,7 +201,7 @@ def divergence_check_multi_jit(x_range=np.array([1, 2, 3, 4]), y_range=np.array(
         index += 1
 
     return mesh
-    
+
 
 comp_type = {
     "Naïve": divergence_check_naive,
@@ -207,5 +210,3 @@ comp_type = {
     "MultiProc": divergence_check_multi,
     "MultiProc JIT": divergence_check_multi_jit
     }
-
-#divergence_check_multi()
