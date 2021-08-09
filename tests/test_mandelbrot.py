@@ -4,9 +4,6 @@ import os
 from manset.mandelbrot import *
 
 
-# def test_this():
-#     assert 1==1
-
 def test_naive():
     path = pathlib.Path(__file__).parent.resolve()
     test_mesh = np.load(os.path.join(path, "Mandelbrot_test_data.npy")).T
@@ -18,8 +15,9 @@ def test_naive():
     print(tested_mesh[10, 10])
     print(np.round(tested_mesh))
     test_result = test_mesh == tested_mesh
-    assert test_result.all() == True
-    
+    assert test_result.all()
+
+
 def test_jit():
     path = pathlib.Path(__file__).parent.resolve()
     test_mesh = np.load(os.path.join(path, "Mandelbrot_test_data.npy")).T
@@ -31,7 +29,8 @@ def test_jit():
     print(tested_mesh[10, 10])
     print(np.round(tested_mesh))
     test_result = test_mesh == tested_mesh
-    assert test_result.all() == True
+    assert test_result.all()
+
 
 def test_jit_parallel():
     path = pathlib.Path(__file__).parent.resolve()
@@ -44,7 +43,8 @@ def test_jit_parallel():
     print(tested_mesh[10, 10])
     print(np.round(tested_mesh))
     test_result = test_mesh == tested_mesh
-    assert test_result.all() == True
+    assert test_result.all()
+
 
 def test_multi():
     path = pathlib.Path(__file__).parent.resolve()
@@ -57,7 +57,8 @@ def test_multi():
     print(tested_mesh[10, 10])
     print(np.round(tested_mesh))
     test_result = test_mesh == tested_mesh
-    assert test_result.all() == True
+    assert test_result.all()
+
 
 def test_multi_jit():
     path = pathlib.Path(__file__).parent.resolve()
@@ -70,4 +71,4 @@ def test_multi_jit():
     print(tested_mesh[10, 10])
     print(np.round(tested_mesh))
     test_result = test_mesh == tested_mesh
-    assert test_result.all() == True
+    assert test_result.all()

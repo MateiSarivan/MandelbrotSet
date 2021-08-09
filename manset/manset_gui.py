@@ -282,6 +282,10 @@ class MansetGUI:
         
         # plt.show()
 
+    def destroy_gui(self):
+        self.root.destroy()
+        return True
+
     def update_scale(self, event):
         self.CurrentXFocus = self.XFocus[self.scaler_x.get()-1]
         self.CurrentYFocus = self.YFocus[self.scaler_y.get()-1]
