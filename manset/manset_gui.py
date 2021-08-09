@@ -30,7 +30,7 @@ class MansetGUI:
 
         self.XFocus = np.linspace(-2.3, 0.7, 200)
         self.YFocus = np.linspace(-1.5, 1.5, 200)
-        self.PointsNumber = np.linspace(20, 10000, 100)
+        self.PointsNumber = np.linspace(20, 10000, 100, dtype=int)
         self.CurrentXFocus = self.XFocus[99]
         self.CurrentYFocus = self.YFocus[99]
         self.CurrentXYRange = self.XYRange[99]
@@ -107,7 +107,7 @@ class MansetGUI:
         self.txt_saved_experiments_value = tkinter.StringVar()
         self.txt_status = tkinter.StringVar()
 
-        txt_compute_mode.set("Select computational mode: ")
+        txt_compute_mode.set("Select computation method: ")
         txt_no_cores.set("Select number of cores: ")
         txt_no_points.set("Select number of points/axis: ")
         txt_zoom.set("Zoom:")
@@ -319,26 +319,27 @@ class MansetGUI:
         StatsView(self.root, self.experiments)
 
     def save(self):
-        self.txt_status.set("Saving experiments... Wait!")
-        self.button_save['state'] = tkinter.DISABLED
         dt_string = datetime.now().strftime("%d-%m-%Y %H-%M-%S")
         name = "Mandelbrot " + dt_string
         file_address = tkinter.filedialog.askdirectory()
         if name not in file_address and len(file_address):
+            self.txt_status.set("Saving experiments... Wait!")
+            self.button_save['state'] = tkinter.DISABLED
             file_address = os.path.join(file_address, name)
             if not os.path.exists(file_address):
                 os.makedirs(file_address)
-        np.save(os.path.join(file_address, "Mandelbrot_data.npy"), self.experiments)
 
-        def save_thread():
-            plot_experiments(file_address, self.experiments)
-            generate_pdf(file_address, self.experiments)
-            merge_pdfs(file_address, "Mandelbrot set experiments.pdf")
-            self.txt_status.set("Ready")
-            self.button_save['state'] = tkinter.NORMAL
+            np.save(os.path.join(file_address, "Mandelbrot_data.npy"), self.experiments)
 
-        thr = Thread(target=save_thread)
-        thr.start()
+            def save_thread():
+                plot_experiments(file_address, self.experiments)
+                generate_pdf(file_address, self.experiments)
+                merge_pdfs(file_address, "Mandelbrot set experiments.pdf")
+                self.txt_status.set("Ready")
+                self.button_save['state'] = tkinter.NORMAL
+
+            thr = Thread(target=save_thread)
+            thr.start()
 
     def plot(self):
 

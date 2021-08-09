@@ -43,7 +43,7 @@ Install the package:
 
     >python setup.py install
 
-# Navigating the complex plane
+# Navigating and saving the complex plane
 
 In your terminal execute:
 
@@ -53,4 +53,47 @@ In your terminal execute:
   <img src="./img/mandelbrot_GUI.png" alt="Scrennshot of the mandelbrot navigator GUI" width="738">
 </p>
 
-This will open the gui window of the mandelbrot set navigator software. On the left hand side of the window, the mandelbrot set plot can be observed. On the right hand side of the window, navigation controls and information about the plotted values are available. 
+This will open the gui window of the mandelbrot set navigator software. On the left hand side of the window, the mandelbrot set plot can be observed (***visual output***). On the right hand side of the window, navigation controls and information about the plotted values are available (***user input***).
+
+The default computation mode with which the software starts is selected to be the naïve one which is also the slowest. The user can change this computation methods by using the dropdown menu labeled "***Select computation method***". The user can choose one of the five computation methods mentioned above. Everytime the user makes a change using the GUI controls available, a new "***experiment***" is generated and saved in memory. 
+
+Experiment saving can be enabled or disabled by ticking or unticking the checkbox labeled "***Save Experiment***". The number of saved experiments is displayed at the bottom of the information list. The maximum number of experiments which are allowed to be saved in one session is 20. Saving the experiments on the data storage drive is possible by clickig the button labeled "***Save experiments***".
+
+<p align="center">
+  <img src="./img/pick_folder.png" alt="Scrennshot of saving procedure" width="738">
+</p>
+
+The user is prompted to pick a folder where the expriments should be saved. Once a folder is picked by the user, a new folder is created named "Mandelbrot DD-MM-YY HH-MM-SS" (current date and time at the moment of creation).
+
+<p align="center">
+  <img src="./img/folder.png" alt="Scrennshot of saving procedure" width="738">
+</p>
+
+The created folder contains the following files:
+
+* .png files of the Mandelbrot plot of each experiment
+* .png file of the time statistics for the whole saved session
+* .pdf file containing meta data about the experiment session: data about the machine which was used, how many experiments were performed during the session, the computation methods used, and the time and date of the experiment together with plots and time statistics
+* .npy file containing the data structure of the experiment session as follows:
+
+        experiment_session = [
+            experiment_0 = {
+                    "elapsed_time": time elapsed for the experiment computation (float)
+                    "computation_method": the method used for computation (string)
+                    "number of cores": number of cores used for computation, where appliable (string)
+                    "range": the value range between x|y minimum and z|y maximum (float)
+                    "min_x": minimum value of x (float)
+                    "max_x": maximum value of x (float)
+                    "min_y": minimum value of y (float)
+                    "max_y": maximum value of x (float)
+                    "no_points": number of points plotted per axis (int)
+                    "result": a numpy mesh with shape [no_points x no_points] (numpy array of floats)
+                }
+            experiment_1 = {...}
+            .
+            .
+            .
+            experiment_19 = {...}
+            
+            ]
+
