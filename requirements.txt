@@ -4,3 +4,4 @@ numpy == 1.21.1
 matplotlib == 3.4.2
 pypdf2 == 1.26.0
 reportlab == 3.5.68
+numba == 0.53.1
