@@ -3,7 +3,7 @@ from tkinter import ttk
 from tkinter.constants import HORIZONTAL
 import numpy as np
 import matplotlib.pyplot as plt
-from manset.clean_m import *
+from manset.mandelbrot import *
 from manset.stats_view import StatsView
 from manset.plotting import plot_experiments
 from matplotlib.backends.backend_tkagg import (
@@ -16,6 +16,7 @@ import os
 from datetime import date, datetime
 from manset.pdf_gen import generate_pdf
 from manset.pdf_merge import merge_pdfs
+from threading import Thread
 
 class MansetGUI:
     def __init__(self):
@@ -29,7 +30,7 @@ class MansetGUI:
 
         self.XFocus = np.linspace(-2.3, 0.7, 200)
         self.YFocus = np.linspace(-1.5, 1.5, 200)
-        self.PointsNumber = np.linspace(50, 10000, 100)
+        self.PointsNumber = np.linspace(20, 10000, 100)
         self.CurrentXFocus = self.XFocus[99]
         self.CurrentYFocus = self.YFocus[99]
         self.CurrentXYRange = self.XYRange[99]
@@ -107,6 +108,7 @@ class MansetGUI:
         self.txt_selected_cores_value = tkinter.StringVar()
         self.txt_selected_no_points_value =tkinter.StringVar()
         self.txt_saved_experiments_value = tkinter.StringVar()
+        self.txt_status = tkinter.StringVar()
 
         txt_compute_mode.set("Select computational mode: ")
         txt_no_cores.set("Select number of cores: ")
@@ -124,6 +126,7 @@ class MansetGUI:
         txt_selected_cores.set("Number of cores selected: ")
         txt_selected_no_points.set("Number of points per axis: ")
         txt_saved_experiments.set("Number of saved experiments: ")
+        self.txt_status.set("Ready")
         
         self.txt_selected_no_points_value.set(self.CurrentPointsNumber)
         self.txt_time_value.set("TBD")
@@ -163,6 +166,7 @@ class MansetGUI:
         label_selected_cores_value = tkinter.Label(frame_selected_cores, textvariable=self.txt_selected_cores_value, width=30)
         label_selected_no_points_value = tkinter.Label(frame_selected_no_points, textvariable=self.txt_selected_no_points_value, width=30)
         label_saved_experiments_value = tkinter.Label(frame_saved_experiments, textvariable=self.txt_saved_experiments_value, width=30)
+        label_status = tkinter.Label(controls_frame, textvariable=self.txt_status, width=60)
         self.compute_mode = tkinter.OptionMenu(compute_mode_frame,
                                                self.variable,
                                                "Naïve", "JIT",
@@ -249,7 +253,7 @@ class MansetGUI:
         self.chbox.pack(side=tkinter.TOP)
         button_stats.pack(side=tkinter.LEFT, expand=True, fill=tkinter.X)
         button_save.pack(side=tkinter.LEFT, expand = True, fill=tkinter.X)
-        
+        self.button_save = button_save
         
         
         sep = ttk.Separator(controls_frame, orient="horizontal")
@@ -264,7 +268,7 @@ class MansetGUI:
         sep = ttk.Separator(controls_frame, orient="horizontal")
         sep.pack(side=tkinter.TOP, expand=True)
         frame_buttons.pack(side=tkinter.TOP, expand=True, fill=tkinter.X)
-        
+        label_status.pack(side=tkinter.TOP, expand=True, fill=tkinter.X)
         
         plot_frame.pack(side=tkinter.LEFT, fill=tkinter.Y, expand=False)
         controls_frame.pack(side=tkinter.RIGHT, fill=tkinter.Y,
@@ -309,6 +313,8 @@ class MansetGUI:
         StatsView(self.root, self.experiments)
 
     def save(self):
+        self.txt_status.set("Saving experiments... Wait!")
+        self.button_save['state'] = tkinter.DISABLED
         dt_string = datetime.now().strftime("%d-%m-%Y %H-%M-%S")
         name = "Mandelbrot " + dt_string
         file_address = tkinter.filedialog.askdirectory()
@@ -316,11 +322,19 @@ class MansetGUI:
             file_address = os.path.join(file_address, name)
             if not os.path.exists(file_address):
                 os.makedirs(file_address)
-
         np.save(os.path.join(file_address, "Mandelbrot_data.npy"), self.experiments)
-        plot_experiments(file_address, self.experiments)
-        generate_pdf(file_address, self.experiments)
-        merge_pdfs(file_address, "Mandelbrot set experiments.pdf")
+        def save_thread():
+        
+            plot_experiments(file_address, self.experiments)
+            generate_pdf(file_address, self.experiments)
+            merge_pdfs(file_address, "Mandelbrot set experiments.pdf")
+            self.txt_status.set("Ready")
+            self.button_save['state'] = tkinter.NORMAL
+        
+        thr = Thread(target=save_thread)
+        thr.start()
+
+        
     def plot(self):
 
         x_min = self.CurrentXFocus - self.CurrentXYRange/2
@@ -363,9 +377,11 @@ class MansetGUI:
         }
 
         if self.var1.get():
-            self.experiments.append(experiment)
-            self.txt_saved_experiments_value.set(str(len(self.experiments)))
-
+            if len(self.experiments) < 20:
+                self.experiments.append(experiment)
+                self.txt_saved_experiments_value.set(str(len(self.experiments)))
+            else:
+                self.txt_status.set("Reached maximum allowed experiments. Start a new session.")
     def updateValue(self, event):
         self.CurrentXFocus = self.XFocus[self.scaler_x.get()-1]
         self.CurrentYFocus = self.YFocus[self.scaler_y.get()-1]
