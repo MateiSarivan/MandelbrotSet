@@ -59,11 +59,17 @@ The default computation mode with which the software starts is selected to be th
 
 The plot of the Mandelbrot set can be refined by using the slider labeled ***Select number of points/axis***, which is set by default to only 20 points per axis. By increasing the value, the computations time increases too; and depending on the selected computation method and the machine, it can take a long time to plot an image with 10000 points per axis, for example. 
 
-The sliders labeled ***zoom***, ***y axis navigation***, ***x axis navigation***
+The sliders labeled ***zoom***, ***y axis navigation*** and ***x axis navigation*** control the navigation of the plot by modifing the minimum and the maximum value of the *x* and *y* coordinates on the real and the imaginary axes of the real plane. Since the Mandelbrot set is computed at run time, the zoom amount does not interfere with the quality of the plot as it is customary with similar applications. Howeer, the quality of the plot is directly impacted by the selected number of points per axis.
 
 Everytime the user makes a change using the GUI controls available, a new "***experiment***" is generated and saved in memory, while all the information about the experiment is displayed on the right hand side. 
 
-Experiment saving can be enabled or disabled by ticking or unticking the checkbox labeled "***Save Experiment***". The number of saved experiments is displayed at the bottom of the information list. The maximum number of experiments which are allowed to be saved in one session is 20. Saving the experiments on the data storage drive is possible by clickig the button labeled "***Save experiments***".
+Experiment saving can be enabled or disabled by ticking or unticking the checkbox labeled "***Save Experiment***". The number of saved experiments is displayed at the bottom of the information list. The maximum number of experiments which are allowed to be saved in one session is 20. Time benchmarks are provided by clicking the ***Show statistics*** button. 
+
+
+
+A bar plot is generated in a new window with the time expressed in seconds elapsed for each experiment on the *y* axis and the experiment number on the *x* axis. On the right hand side of the new window, data about each experiment is given (experient number, computation method, number of cores, number of points per axis). When clicking on an experiment in the list, further info is given (min/max value of x and y, value range).
+
+Saving the experiments on the data storage drive is possible by clickig the button labeled "***Save experiments***".
 
 <p align="center">
   <img src="./img/pick_folder.png" alt="Scrennshot of saving procedure" width="738">
