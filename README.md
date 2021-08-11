@@ -136,12 +136,34 @@ Each method takes three parameters: two numpy arrays containing floats, which ar
 
 A number of experiments were made using two machines:
 
-* Lenovo P15, Intel I9 10th GEN: *Windows 10* machine with processor *Intel64 Family 6 Model 165 Stepping 2, GenuineIntel* and 34GB of installed RAM
-* Dell XPS13, Intel I7 6th GEN: *Windows 10* machine with processor *Intel64 Family 6 Model 78 Stepping 3, GenuineIntel* and 8GB of installed RAM
-*
+* Lenovo P15, Intel I9 10th GEN: *Windows 10* machine with processor *Intel64 Family 6 Model 165 Stepping 2, GenuineIntel* and 34GB of installed RAM (left image below)
+* Dell XPS13, Intel I7 6th GEN: *Windows 10* machine with processor *Intel64 Family 6 Model 78 Stepping 3, GenuineIntel* and 8GB of installed RAM (right image below)
 
 
 <p float="left">
   <img src="./img/Lenovo.png" width="400" />
   <img src="./img/Dell.png" width="400" /> 
 </p>
+
+Obviously, the Dell machine is dwarfed by the Lenovo one in terms of generating the plots fast. It can be observed that for the Lenovo machine, the most optimal core number selection for the multiprocessing implementation is 8 cores. When more than 8 cores are selected, the logical cores (virtual) kick in, thus increasing the computation time. In the case of the Dell machine, 3 cores appears to be the optimal selection. Regarding the mltiprocessing just-in-time implemtation, using one core only appears to be the optimal selection for both machines. The just-in-time parallel implementation is the fastest for both machine as long as the first iteration is not considered (however, even the first iteration is faster than the other methods too).
+These results are contained inside the ***experiments*** folder of the repository. The .npy files were not added due to 100MB GitHub limit/file.
+
+# Some plots
+
+<p float="left">
+  <img src="./img/Experiment 1.png" width="400" />
+  <img src="./img/Experiment 2.png" width="400" /> 
+</p>
+
+<p float="left">
+  <img src="./img/Experiment 3.png" width="400" />
+  <img src="./img/Experiment 4.png" width="400" /> 
+</p>
+
+# Uninstall
+
+This only works properly if you have used a virtual environemnt. You simply have to delete the environemnt with:
+
+    >conda env remove -n manset_env
+
+All the generated file will remain on your computer.
