@@ -134,9 +134,14 @@ Each method takes three parameters: two numpy arrays containing floats, which ar
 
 # Profiling 
 
-A number of experiments were made using three machines:
+A number of experiments were made using two machines:
 
-* Lenovo P15, Intel I9 10th GEN: 
-* Dell XPS13, Intel I7 6th GEN: 
+* Lenovo P15, Intel I9 10th GEN: *Windows 10* machine with processor *Intel64 Family 6 Model 165 Stepping 2, GenuineIntel* and 34GB of installed RAM
+* Dell XPS13, Intel I7 6th GEN: *Windows 10* machine with processor *Intel64 Family 6 Model 78 Stepping 3, GenuineIntel* and 8GB of installed RAM
 *
 
+
+<p float="left">
+  <img src="./img/Lenovo.png" width="400" />
+  <img src="./img/Dell.png" width="400" /> 
+</p>
