@@ -9,12 +9,8 @@ setup(
     author_email="ioanms@mp.aau.dk",
     packages=find_packages(),
     package_dir={
-        "manset":"manset"
+        "manset": "manset"
         },
-    package_data = {
-        "manset": ["json/*"
-        ]
-    },
     entry_points={
         "console_scripts": [
             "manset=manset.__init__:manset_gui"
@@ -32,5 +28,4 @@ setup(
         "Natural Language :: English",
         "Programming Language :: Python :: 3.8"
     ]
-
 )

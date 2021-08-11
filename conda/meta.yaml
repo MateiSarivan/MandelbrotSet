@@ -1,6 +1,6 @@
 package:
   name: manset
-  version: 0.1
+  version: 0.2
 
 source:
   path: ../
@@ -18,6 +18,10 @@ requirements:
     - setuptools
     - numpy
     - matplotlib
+    - pypdf2
+    - reportlab
+    - psutil
+    - numba
 
   entry_points:
     - manset = manset.__init__:manset_gui
