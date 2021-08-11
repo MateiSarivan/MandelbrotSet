@@ -1,10 +1,7 @@
-<a href="">
-    <img src="./img/logo.png" alt="Mendelbrot logo" title="Mandelbrot" align="right" height="60" />
-</a>
 
+<a href=""><img src="./img/logo.png" alt="Mendelbrot logo" title="Mandelbrot" align="right" height="60" /></a>
 
 # MandelbrotSet
-
 
 ![PyTest](https://github.com/MateiSarivan/MandelbrotSet/actions/workflows/tests.yml/badge.svg) ![PyTest](https://github.com/MateiSarivan/MandelbrotSet/actions/workflows/conda_build.yml/badge.svg)
 
@@ -20,7 +17,8 @@ There are five possible computation methods from which the user can select from:
 
 # Installation
 
-## Option 1 
+## Option 1
+
 a) In an anaconda terminal execute (you may want to use a virtual environment <see b)>):
 
     >conda install -c mateisarivan -c conda-forge manset
@@ -31,7 +29,8 @@ b) To cleanly remove the installed package use:
     >conda activate manset_env
     >conda install -c mateisarivan -c conda-forge manset
 
-## Option 2 
+## Option 2
+
 Clone git repository MateiSarivan/MandelbrotSet using
 
     >git clone https://github.com/MateiSarivan/MandelbrotSet.git
@@ -55,20 +54,19 @@ In your terminal execute:
 
 This will open the gui window of the mandelbrot set navigator software. On the left hand side of the window, the mandelbrot set plot can be observed (***visual output***). On the right hand side of the window, navigation controls and information about the plotted values are available (***user input***).
 
-The default computation mode with which the software starts is selected to be the naïve one which is also on of the slowest. The user can change this computation methods by using the dropdown menu labeled "***Select computation method***". The user can choose one of the five computation methods mentioned above. When selecting one of the multiprocessing options, the number of cores used in the experiment can be adjusted by using the slider labeled ***Select number of cores***. The slider can take values from ***0*** up to the maximum of cores available on the machine (including logical cores for Intel CPUs). If value ***0*** is selected, the default value *ProcessPoolExecutor* is used. 
+The default computation mode with which the software starts is selected to be the naïve one which is also on of the slowest. The user can change this computation methods by using the dropdown menu labeled "***Select computation method***". The user can choose one of the five computation methods mentioned above. When selecting one of the multiprocessing options, the number of cores used in the experiment can be adjusted by using the slider labeled ***Select number of cores***. The slider can take values from ***0*** up to the maximum of cores available on the machine (including logical cores for Intel CPUs). If value ***0*** is selected, the default value *ProcessPoolExecutor* is used.
 
-The plot of the Mandelbrot set can be refined by using the slider labeled ***Select number of points/axis***, which is set by default to only 20 points per axis. By increasing the value, the computations time increases too; and depending on the selected computation method and the machine, it can take a long time to plot an image with 10000 points per axis, for example. 
+The plot of the Mandelbrot set can be refined by using the slider labeled ***Select number of points/axis***, which is set by default to only 20 points per axis. By increasing the value, the computations time increases too; and depending on the selected computation method and the machine, it can take a long time to plot an image with 10000 points per axis, for example.
 
 The sliders labeled ***zoom***, ***y axis navigation*** and ***x axis navigation*** control the navigation of the plot by modifing the minimum and the maximum value of the *x* and *y* coordinates on the real and the imaginary axes of the real plane. Since the Mandelbrot set is computed at run time, the zoom amount does not interfere with the quality of the plot as it is customary with similar applications. Howeer, the quality of the plot is directly impacted by the selected number of points per axis.
 
-Everytime the user makes a change using the GUI controls available, a new "***experiment***" is generated and saved in memory, while all the information about the experiment is displayed on the right hand side. 
+Everytime the user makes a change using the GUI controls available, a new "***experiment***" is generated and saved in memory, while all the information about the experiment is displayed on the right hand side.
 
-Experiment saving can be enabled or disabled by ticking or unticking the checkbox labeled "***Save Experiment***". The number of saved experiments is displayed at the bottom of the information list. The maximum number of experiments which are allowed to be saved in one session is 20. Time benchmarks are provided by clicking the ***Show statistics*** button. 
+Experiment saving can be enabled or disabled by ticking or unticking the checkbox labeled "***Save Experiment***". The number of saved experiments is displayed at the bottom of the information list. The maximum number of experiments which are allowed to be saved in one session is 20. Time benchmarks are provided by clicking the ***Show statistics*** button.
 
 <p align="center">
   <img src="./img/stats.png" alt="Scrennshot of saving procedure" width="738">
 </p>
-
 
 A bar plot is generated in a new window with the time expressed in seconds elapsed for each experiment on the *y* axis and the experiment number on the *x* axis. On the right hand side of the new window, data about each experiment is given (experient number, computation method, number of points per axis, and number of cores used). When clicking on an experiment in the list, further info is given (min/max value of x and y, value range).
 
@@ -132,17 +130,16 @@ There are a total of six modules inside the ***manset*** package, the ***manset_
 
 Each method takes three parameters: two numpy arrays containing floats, which are the sets of real and imaginary values for the c constant which used during the divergence check, an integer, which is the number of cores to be used during the computation, relevant only for the multiprocessing implementations.
 
-# Profiling 
+# Profiling and benchmarking
 
 A number of experiments were made using two machines:
 
 * Lenovo P15, Intel I9 10th GEN: *Windows 10* machine with processor *Intel64 Family 6 Model 165 Stepping 2, GenuineIntel* and 34GB of installed RAM (left image below)
 * Dell XPS13, Intel I7 6th GEN: *Windows 10* machine with processor *Intel64 Family 6 Model 78 Stepping 3, GenuineIntel* and 8GB of installed RAM (right image below)
 
-
 <p float="left">
   <img src="./img/Lenovo.png" width="400" />
-  <img src="./img/Dell.png" width="400" /> 
+  <img src="./img/Dell.png" width="400" />
 </p>
 
 Obviously, the Dell machine is dwarfed by the Lenovo one in terms of generating the plots fast. It can be observed that for the Lenovo machine, the most optimal core number selection for the multiprocessing implementation is 8 cores. When more than 8 cores are selected, the logical cores (virtual) kick in, thus increasing the computation time. In the case of the Dell machine, 3 cores appears to be the optimal selection. Regarding the mltiprocessing just-in-time implemtation, using one core only appears to be the optimal selection for both machines. The just-in-time parallel implementation is the fastest for both machine as long as the first iteration is not considered (however, even the first iteration is faster than the other methods too).
@@ -152,12 +149,12 @@ These results are contained inside the ***experiments*** folder of the repositor
 
 <p float="left">
   <img src="./img/Experiment 1.png" width="400" />
-  <img src="./img/Experiment 2.png" width="400" /> 
+  <img src="./img/Experiment 2.png" width="400" />
 </p>
 
 <p float="left">
   <img src="./img/Experiment 3.png" width="400" />
-  <img src="./img/Experiment 4.png" width="400" /> 
+  <img src="./img/Experiment 4.png" width="400" />
 </p>
 
 # Uninstall
