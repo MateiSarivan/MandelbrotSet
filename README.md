@@ -142,6 +142,6 @@ A number of experiments were made using two machines:
 
 
 <p float="left">
-  <img src="./img/Lenovo.png" width="420" />
-  <img src="./img/Dell.png" width="420" /> 
+  <img src="./img/Lenovo.png" width="400" />
+  <img src="./img/Dell.png" width="400" /> 
 </p>
