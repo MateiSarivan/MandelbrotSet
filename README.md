@@ -114,3 +114,29 @@ The created folder contains the following files:
             
             ]
 
+# Overall software design considerations
+
+This software was designed in order to showcase the benefits of code optimisation when dealing with a high number of iterations and floating point values. To do this, three implementations were required: naïve (using vanilla python and numpy), just-in-time compiling (using numba) and multiprocessing (using concurrent futures). During exprimentation with these methods, it was found out that by making hybrid implementations between just-in-time and multiprocessing, better time results are obtained. Therefore, two more Mandelbrot set computation implementation were added: just-in-time with parallel computing and multiprocessing with just-in-time compiling. All these implementation can be found inside the ***mandelbrot.py*** file.
+
+In terms of optimising the code, it was found out that by applying just-in-time compiling with parallel processing direcly on the naïve version of the implementation, the results were poor. Therefore the just-in-time parallel computing is split in two methods ***divergence_check_jit_parallel*** on which just-in-time compiling with parallel processing is applied; and ***div_check_jit_parallel***, where only just-in-time compiling is applied on the divergence check algorithm. It is proven this way that there are two main parts of the Mandelbrot set computation algorithm: the iteration through the complex plane along the real axis (***range_x*** in code) and the imaginary axis (***range_y*** in code); and the divergence check for each given point, with a number of 100 maximum iterations.
+
+There are a total of six modules inside the ***manset*** package, the ***manset_gui.py*** being the main one, where the graphical user interface of the software is defined. From there, while the user adjusts the mandelbrot set being plotted, the computation methods are called from inside the ***mandelbrot.py*** module. A total of five methods containing the mandelbrot computation methods implementations are defined in this module. The methods are put inside a dictionary for implementation convenience regarding the dropdown menu from where the user selects the desired computation method:
+
+    comp_type = {
+        "Naïve": divergence_check_naive,
+        "JIT": divergence_check_jit,
+        "JIT Parallel": divergence_check_jit_parallel,
+        "MultiProc": divergence_check_multi,
+        "MultiProc JIT": divergence_check_multi_jit
+        }
+
+Each method takes three parameters: two numpy arrays containing floats, which are the sets of real and imaginary values for the c constant which used during the divergence check, an integer, which is the number of cores to be used during the computation, relevant only for the multiprocessing implementations.
+
+# Profiling 
+
+A number of experiments were made using three machines:
+
+* Lenovo P15, Intel I9 10th GEN: 
+* Dell XPS13, Intel I7 6th GEN: 
+*
+

@@ -5,6 +5,7 @@ from matplotlib.backend_bases import key_press_handler
 from matplotlib.figure import Figure
 from numpy import exp
 
+
 class StatsView:
     def __init__(self, root, experiments):
 
@@ -13,7 +14,7 @@ class StatsView:
         top_frame = tkinter.Toplevel(root)
         top_frame.title("Experiments statistics")
         top_frame.geometry("783x484")
-        
+
         time_data = []
         experiment_numbers = []
         experiment_index = 0
@@ -21,10 +22,12 @@ class StatsView:
         for experiment in experiments:
             time_data.append(experiment['elapsed_time'])
             experiment_numbers.append(experiment_index)
-            experiment_string = str(experiment_index) + ": " + experiment['computation_method'] + " | " + str(int(experiment['no_points'])) + " pts" + "  |  " + experiment["number of cores"] + " cores" 
+            experiment_string = (str(experiment_index) + ": " + experiment['computation_method'] + " | " +
+                                 str(int(experiment['no_points'])) + " pts" + "  |  " +
+                                 experiment["number of cores"] + " cores")
             experiment_strings.append(experiment_string)
             experiment_index += 1
-            
+
         plot_frame = tkinter.Frame(top_frame)
         right_frame = tkinter.Frame(top_frame)
         listbox_frame = tkinter.Frame(right_frame)
@@ -42,7 +45,7 @@ class StatsView:
         x_txt.set("x min | x max: ")
         y_txt.set("y min | y max: ")
         range_txt.set("Range: ")
-        self.value_x_txt.set("TBD")        
+        self.value_x_txt.set("TBD")
         self.value_y_txt.set("TBD")
         self.value_range_txt.set("TBD")
 
@@ -51,7 +54,7 @@ class StatsView:
         range_label = tkinter.Label(range_frame, textvariable=range_txt, width=20)
         value_x_label = tkinter.Label(x_frame, textvariable=self.value_x_txt, width=20)
         value_y_label = tkinter.Label(y_frame, textvariable=self.value_y_txt, width=20)
-        value_range_label = tkinter.Label(range_frame, textvariable=self.value_range_txt, width=20)                
+        value_range_label = tkinter.Label(range_frame, textvariable=self.value_range_txt, width=20)
 
         fig = Figure(figsize=(5, 4), dpi=100)
         fig.add_subplot(111).bar(experiment_numbers, time_data)
@@ -64,23 +67,20 @@ class StatsView:
         toolbar.update()
         canvas.get_tk_widget().pack(side=tkinter.TOP, fill=tkinter.BOTH, expand=1)
 
-
         def on_key_press(event):
             print("you pressed {}".format(event.key))
             key_press_handler(event, canvas, toolbar)
 
         canvas.mpl_connect("key_press_event", on_key_press)
 
-
-        self.listbox = tkinter.Listbox(listbox_frame, width = 35, height=25)
+        self.listbox = tkinter.Listbox(listbox_frame, width=35, height=25)
         self.listbox.bind("<<ListboxSelect>>", self.list_select)
 
         scrollbar = tkinter.Scrollbar(listbox_frame)
-        self.listbox.pack(side = tkinter.RIGHT, fill = tkinter.BOTH, expand=True)
-        scrollbar.pack(side = tkinter.LEFT, fill = tkinter.BOTH)
-        self.listbox.config(yscrollcommand = scrollbar.set)
-        scrollbar.config(command = self.listbox.yview)       
-
+        self.listbox.pack(side=tkinter.RIGHT, fill=tkinter.BOTH, expand=True)
+        scrollbar.pack(side=tkinter.LEFT, fill=tkinter.BOTH)
+        self.listbox.config(yscrollcommand=scrollbar.set)
+        scrollbar.config(command=self.listbox.yview)
 
         plot_frame.pack(side=tkinter.LEFT, fill=tkinter.Y, expand=False)
         listbox_frame.pack(side=tkinter.TOP, fill=tkinter.BOTH, expand=True)
@@ -96,14 +96,12 @@ class StatsView:
         y_frame.pack(side=tkinter.TOP)
         range_frame.pack(side=tkinter.TOP)
 
-
         right_frame.pack(side=tkinter.RIGHT, expand=True)
 
         for string in experiment_strings:
             self.listbox.insert(tkinter.END, string)
 
         print('Wtf')
-
 
     def list_select(self, event):
         selection = event.widget.curselection()
@@ -114,5 +112,3 @@ class StatsView:
             self.value_x_txt.set(str(round(experiment['min_x'], 3)) + "  |  " + str(round(experiment['max_x'], 4)))
             self.value_y_txt.set(str(round(experiment['min_y'], 3)) + "  |  " + str(round(experiment['max_y'], 4)))
             self.value_range_txt.set(str(round(experiment['range'], 4)))
-            
-

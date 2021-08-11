@@ -10,8 +10,10 @@ import platform as pfm
 import json
 import numpy as np
 
+
 def ord(n):
-    return str(n)+("th" if 4<=n%100<=20 else {1:"st",2:"nd",3:"rd"}.get(n%10, "th"))
+    return str(n)+("th" if 4 <= n % 100 <= 20 else {1: "st", 2: "nd", 3: "rd"}.get(n % 10, "th"))
+
 
 def generate_pdf(file_address, experiments):
     """
@@ -19,30 +21,18 @@ def generate_pdf(file_address, experiments):
 
     Parameters
     -------
-    
     file_address : Path
         Directory for file creation
-    x_0 : List of float
-        Initial value of x.
-    y_0 : List of float
-        Initial value of y.
-    z_0 : List of float
-        Initial value of z.
-    dt: Float
-        Iteration step.
-    N: Float
-        Length of iteration.
-    elapsed_time : Float
-        Time elapsed for parametric analysis
+    experiments : List of dictionaries containing experiment data
     """
-    names = {"Naïve": "Naïve implementation",
-    "JIT": "Numba just-in-time compiling",
-    "JIT Parallel": "Numba just-in-time compiling with parallel processing",
-    "MultiProc": "Multiprocessing",
-    "MultiProc JIT": "Multiprocessing with Numba just-in-time compiling"
-    }
 
-    #experiments = np.load("Mandelbrot_data.npy", allow_pickle=True)
+    names = {"Naïve": "Naïve implementation",
+             "JIT": "Numba just-in-time compiling",
+             "JIT Parallel": "Numba just-in-time compiling with parallel processing",
+             "MultiProc": "Multiprocessing",
+             "MultiProc JIT": "Multiprocessing with Numba just-in-time compiling"
+             }
+
     canvas = Canvas(os.path.join(file_address, "AA.pdf"), pagesize=A4)
     canvas.setFont("Times-Roman", 28)
     canvas.drawString(5 * cm, 27 * cm, "Mandelbrot Set Experiments")
@@ -57,27 +47,27 @@ def generate_pdf(file_address, experiments):
     time_hms = time.strftime('%H:%M:%S')
 
     time_string = ' '.join([day_today + ',',
-        "the " + ord(int(date_today)),
-        "of " + month_today,
-        year_today + ",",
-        "at",
-        str(time_hms)    
-    ])
+                            "the " + ord(int(date_today)),
+                            "of " + month_today,
+                            year_today + ",",
+                            "at",
+                            str(time_hms)
+                            ])
 
     canvas.drawString(7.7 * cm, (27-3.5) * cm, time_string)
 
     canvas.setFillColor(black)
-    canvas.drawString(2.5 * cm, (27-4.5) * cm, str(len(experiments)) + " experiments were conducted by using the following computation methods: ")
+    canvas.drawString(2.5 * cm, (27-4.5) * cm, str(len(experiments)) +
+                      " experiments were conducted by using the following computation methods: ")
     methods = []
     index = 5.5
     for experiment in experiments:
         if experiment['computation_method'] not in methods:
             methods.append(experiment['computation_method'])
-            canvas.drawString(3.5 *cm, cm*(27-index), "→ " + names[experiment['computation_method']])
+            canvas.drawString(3.5 * cm, cm*(27-index), "→ " + names[experiment['computation_method']])
             index += 1.0
-    #canvas.drawString(3.5 * cm, (27-5.5)* cm, methods[0])
 
-    canvas.drawString(2.5 * cm, (27-12.5) * cm, "Experiments conducted using a computer with: " )
+    canvas.drawString(2.5 * cm, (27-12.5) * cm, "Experiments conducted using a computer with: ")
     canvas.drawString(3.5 * cm, (27-13.5) * cm, "Python version: " + pfm.python_version())
     canvas.drawString(3.5 * cm, (27-14.5) * cm, "Python build: " + pfm.python_build()[1])
     canvas.drawString(3.5 * cm, (27-15.5) * cm, "Operating system: " + pfm.system())
@@ -87,8 +77,8 @@ def generate_pdf(file_address, experiments):
     total_ram = str(round(total_ram, 2)) + " GB"
     canvas.drawString(3.5 * cm, (27-18.5) * cm, "RAM installed: " + total_ram)
 
-    canvas.drawString(2.5 * cm, (27-20.5) * cm, "In the pages below, time statistics are presented for all the experiments, together with")
+    canvas.drawString(2.5 * cm, (27-20.5) * cm,
+                      "In the pages below, time statistics are presented for all the experiments, together with")
     canvas.drawString(2.5 * cm, (27-21.5) * cm, "Mandelbrot set plots for each experiment:")
-
 
     canvas.save()

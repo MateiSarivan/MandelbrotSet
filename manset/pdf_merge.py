@@ -1,6 +1,7 @@
 import PyPDF2
 import os
 
+
 def merge_pdfs(address, pdf_name):
 
     pdf_files_handlers = []
@@ -21,7 +22,6 @@ def merge_pdfs(address, pdf_name):
             pageObj = pdf_file.getPage(pageNum)
             pdfWriter.addPage(pageObj)
 
-
     pdfOutputFile = open(os.path.join(address, pdf_name + '.pdf'), 'wb')
     pdfWriter.write(pdfOutputFile)
 
@@ -29,7 +29,5 @@ def merge_pdfs(address, pdf_name):
     for pdf_file_handler in pdf_files_handlers:
         pdf_file_handler.close()
 
-
     for pdf_file_address in pdf_file_addresses:
         os.remove(pdf_file_address)
-

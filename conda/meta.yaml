@@ -1,6 +1,6 @@
 package:
   name: manset
-  version: 0.0.1
+  version: 0.1
 
 source:
   path: ../
@@ -23,7 +23,7 @@ requirements:
     - manset = manset.__init__:manset_gui
 
 about:
-  summary: This is a simple meta-package
+  summary: Graphical User Interface implementation of the Mandelbrot set for easy navigation around the border of convergence for two given ranges of values in the complex plane.
 
 extra:
   recipe-maintainers:
