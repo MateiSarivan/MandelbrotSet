@@ -100,7 +100,6 @@ class StatsView:
         for string in experiment_strings:
             self.listbox.insert(tkinter.END, string)
 
-
     def list_select(self, event):
         selection = event.widget.curselection()
         if selection:
