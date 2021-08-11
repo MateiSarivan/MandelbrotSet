@@ -17,7 +17,14 @@ setup(
         ]
     },
     install_requires=[
-        "numpy"
+        "numpy",
+        "numba",
+        "setuptools",
+        "psutil",
+        "matplotlib",
+        "reportlab",
+        "pypdf2"
+
     ],
     zip_safe=False,
     keywords="manset",
