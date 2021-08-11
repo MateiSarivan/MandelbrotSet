@@ -50,6 +50,12 @@ In your terminal execute:
 
     >manset
 
+If not working, execute:
+
+    >python
+    >>>import manset
+    >>>manset.manset_gui()
+
 <p align="center">
   <img src="./img/mandelbrot_GUI.png" alt="Scrennshot of the mandelbrot navigator GUI" width="738">
 </p>
