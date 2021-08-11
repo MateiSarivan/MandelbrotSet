@@ -17,6 +17,8 @@ There are five possible computation methods from which the user can select from:
 
 # Installation
 
+It is assumed the latest conda and python versions are used.
+
 ## Option 1
 
 a) In an anaconda terminal execute (you may want to use a virtual environment <see b)>):
@@ -168,5 +170,13 @@ These results are contained inside the ***experiments*** folder of the repositor
 This only works properly if you have used a virtual environemnt. You simply have to delete the environemnt with:
 
     >conda env remove -n manset_env
+
+If you have not created an environment:
+
+    >conda remove manset
+
+If you have installed using the ***setup.py*** file:
+
+    >pip uninstall manset
 
 All the generated file will remain on your computer.

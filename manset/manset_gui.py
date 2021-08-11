@@ -315,7 +315,6 @@ class MansetGUI:
         self.txt_selected_compute_mode_value.set(self.variable.get())
 
     def stats(self):
-        print("stats")
         StatsView(self.root, self.experiments)
 
     def save(self):

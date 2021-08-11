@@ -229,7 +229,6 @@ def div_check(y_range, c_real, core_no=None):
         else:
             result[index_y] = 0
 
-    # print(result)
     return result
 
 
@@ -249,7 +248,6 @@ def div_check_jit(y_range, c_real):
         else:
             result[index_y] = 0
 
-    # print(result)
     return result
 
 
@@ -258,7 +256,6 @@ def divergence_check_multi(x_range=np.array([1, 2, 3, 4]), y_range=np.array([5, 
     len_y = len(y_range)
     mesh = np.empty((len_x, len_y))
     partial_div_check = functools.partial(div_check, y_range)
-    print("core_no ", core_no)
     pool = ProcessPoolExecutor(max_workers=core_no)
     future = pool.map(partial_div_check, x_range)
     pool.shutdown()
@@ -276,13 +273,11 @@ def divergence_check_multi_jit(x_range=np.array([1, 2, 3, 4]), y_range=np.array(
     len_y = len(y_range)
     mesh = np.empty((len_x, len_y))
     partial_div_check = functools.partial(div_check_jit, y_range)
-    print("core_no  ", core_no)
     pool = ProcessPoolExecutor(max_workers=core_no)
     future = pool.map(partial_div_check, x_range)
     pool.shutdown()
 
     index = 0
-    print(type(future))
     for result in future:
         mesh[index, :] = result
         index += 1

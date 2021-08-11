@@ -10,7 +10,6 @@ class StatsView:
     def __init__(self, root, experiments):
 
         self.experiments = experiments
-        print(len(experiments))
         top_frame = tkinter.Toplevel(root)
         top_frame.title("Experiments statistics")
         top_frame.geometry("783x484")
@@ -101,7 +100,6 @@ class StatsView:
         for string in experiment_strings:
             self.listbox.insert(tkinter.END, string)
 
-        print('Wtf')
 
     def list_select(self, event):
         selection = event.widget.curselection()
