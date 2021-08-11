@@ -33,5 +33,5 @@ jobs:
           meta_yaml_dir: conda
           python-version: ${{ matrix.python-version }} # Values previously defined in `matrix`
           user: mateisarivan
-          label: default
+          label: main
           token: ${{ secrets.ANACONDA_TOKEN }} # Replace with the right name of your secret
