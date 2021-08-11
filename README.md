@@ -3,7 +3,7 @@
 
 # MandelbrotSet
 
-![PyTest](https://github.com/MateiSarivan/MandelbrotSet/actions/workflows/tests.yml/badge.svg) ![PyTest](https://github.com/MateiSarivan/MandelbrotSet/actions/workflows/conda_build.yml/badge.svg)
+![PyTest](https://github.com/MateiSarivan/MandelbrotSet/actions/workflows/tests.yml/badge.svg) ![Conda](https://github.com/MateiSarivan/MandelbrotSet/actions/workflows/conda_build.yml/badge.svg)
 
 Navigating the beatiful Mandelbrot set graphical representation can be a hard task for a computer without the proper computation tools. The graphical user interface proposed in this packege allows the user to navigate the Mandelprot set along the imaginary and the real axis of the complex plane while at the same time being able to zoom in and out to observe the patterns obtained while narrowing down the value range.
 
@@ -129,6 +129,12 @@ There are a total of six modules inside the ***manset*** package, the ***manset_
         }
 
 Each method takes three parameters: two numpy arrays containing floats, which are the sets of real and imaginary values for the c constant which used during the divergence check, an integer, which is the number of cores to be used during the computation, relevant only for the multiprocessing implementations.
+
+# Testing
+
+Pytest suite test was created inside the **tests** folder. The whole software is tested everytime a new version is released and a new commit is sent to GitHub. The status of the test can be checked here: ![PyTest](https://github.com/MateiSarivan/MandelbrotSet/actions/workflows/tests.yml/badge.svg). If green all good, if red, bad bad. Same with the conda label ![Conda](https://github.com/MateiSarivan/MandelbrotSet/actions/workflows/conda_build.yml/badge.svg) which indicates the availability of the software on Anaconda.org at: <https://anaconda.org/mateisarivan/manset>
+
+Tests are ceated for all five computation implementations. The output is compared with an inital mesh which is sure to be good. The initial mesh is stored inside the ***Mandelbrot_test_data.npy*** file. A gui test is implemented as well, which makes sure that the GUI can be rendered. The tests are currently working only for Windows 10 enviroenments with Python 3.8 or greater. However, versions are built for Linux, Windows and OSX when uploaded to Anaconda.org .
 
 # Profiling and benchmarking
 
