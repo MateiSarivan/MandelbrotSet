@@ -13,7 +13,7 @@ setup(
         },
     entry_points={
         "console_scripts": [
-            "manset=manset.__init__:manset_gui"
+            "manset=manset.__main__:manset_gui"
         ]
     },
     install_requires=[
