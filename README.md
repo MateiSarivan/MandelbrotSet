@@ -19,7 +19,7 @@ There are five possible computation methods from which the user can select from:
 
 It is assumed the latest conda and python versions are used.
 
-## Option 1
+## Option 1 (not working on Linux and OSX at this point)
 
 a) In an anaconda terminal execute (you may want to use a virtual environment <see b)>):
 
